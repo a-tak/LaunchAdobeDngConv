@@ -3,7 +3,7 @@
 ## 概要
 
 このスクリプトは指定されたフォルダのRAWファイルをAdobe DNG Converterを呼び出してDNGファイルに変換するものです。
-Adobe DNG Converterはインストールされていることが前提です。
+Adobe DNG Converterはインストールされていることが前提でWindows環境で動作します。
 
 FreeFileSyncでコピーが完了した後に呼び出されることを想定しています。
 
