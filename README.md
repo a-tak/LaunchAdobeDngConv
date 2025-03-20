@@ -9,13 +9,16 @@ FreeFileSyncでコピーが完了した後に呼び出されることを想定�
 
 ## FreeFileSyncでの指定
 
-FreeFIleSyncでは `コマンドを実行` の `完了時の動作` で下記のコマンドを実行します。
+FreeFIleSyncでは `コマンドを実行` の `完了時の動作` で下記のようなコマンドを実行する想定です。
+
 
 ```powershell
 powershell.exe -ExecutionPolicy Bypass -File "D:\Documents\PowerShell\dngconv\dngconv.ps1" %csidl_Pictures%\一眼写真\%Year%\%Date%_\RAW
 ```
 
-引数に渡している `%csidl_Pictures%\一眼写真\%Year%\%Date%_\RAW` はRAWファイルが配置される先です。
+引数のフォルダ指定は環境に合わせて変更が必要。
+
+上記例のでは `%csidl_Pictures%\一眼写真\%Year%\%Date%_\RAW` にRAWファイルが配置される先です。
 
 ## dngconv.ps1
 
