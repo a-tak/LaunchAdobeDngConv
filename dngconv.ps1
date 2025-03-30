@@ -1,4 +1,4 @@
-﻿﻿# デスクトップにログファイルを作成
+﻿﻿﻿﻿﻿﻿﻿﻿# デスクトップにログファイルを作成
 $LogFile = "$env:USERPROFILE\Desktop\dngconv_log.txt"
 $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
 "[$timestamp] 処理開始: スクリプト実行" | Out-File -FilePath $LogFile -Encoding UTF8
@@ -53,14 +53,19 @@ else {
         $message = "[$timestamp] 変換中: ファイル - $($file.Name)"
         $message | Out-File -FilePath $LogFile -Append -Encoding UTF8
         
-        # Adobe DNG Converterを呼び出し、出力先を一つ上のフォルダに設定
-        & $DNGConverter -c -d $OutputFolder $file.FullName
+        # 期待される出力ファイル名を生成（拡張子を.dngに変更）
+        $outputFileName = [System.IO.Path]::ChangeExtension($file.Name, ".dng")
+        $outputFilePath = Join-Path $OutputFolder $outputFileName
         
-        if ($LASTEXITCODE -eq 0) {
-            "[$timestamp] 変換成功: $($file.Name)" | Out-File -FilePath $LogFile -Append -Encoding UTF8
+        # Adobe DNG Converterを呼び出し、処理完了を待機
+        Start-Process -FilePath $DNGConverter -ArgumentList "-c", "-d", $OutputFolder, $file.FullName -Wait -NoNewWindow
+        
+        # 出力ファイルの存在を確認
+        if (Test-Path $outputFilePath) {
+            "[$timestamp] 変換成功: $($file.Name) -> $outputFileName" | Out-File -FilePath $LogFile -Append -Encoding UTF8
         }
         else {
-            "[$timestamp] 変換失敗: $($file.Name) (エラーコード: $LASTEXITCODE)" | Out-File -FilePath $LogFile -Append -Encoding UTF8
+            "[$timestamp] 変換失敗: $($file.Name) (出力ファイルが生成されませんでした)" | Out-File -FilePath $LogFile -Append -Encoding UTF8
         }
     }
 }
@@ -71,8 +76,8 @@ else {
 "[$timestamp] 出力先フォルダを開きます: $OutputFolder" | Out-File -FilePath $LogFile -Append -Encoding UTF8
 Start-Process "explorer.exe" -ArgumentList $OutputFolder
 
-# エラーが発生した場合はログファイルを開く
-if ($LASTEXITCODE -ne 0) {
-    "[$timestamp] エラーが発生したためログファイルを開きます" | Out-File -FilePath $LogFile -Append -Encoding UTF8
+# 変換失敗があった場合はログファイルを開く
+if (Get-Content $LogFile | Select-String "変換失敗:") {
+    "[$timestamp] 変換失敗があったためログファイルを開きます" | Out-File -FilePath $LogFile -Append -Encoding UTF8
     Invoke-Item $LogFile
 }
