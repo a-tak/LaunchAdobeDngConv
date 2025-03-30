@@ -66,3 +66,13 @@ else {
 }
 
 "[$timestamp] 処理完了" | Out-File -FilePath $LogFile -Append -Encoding UTF8
+
+# 出力先フォルダをExplorerで開く
+"[$timestamp] 出力先フォルダを開きます: $OutputFolder" | Out-File -FilePath $LogFile -Append -Encoding UTF8
+Start-Process "explorer.exe" -ArgumentList $OutputFolder
+
+# エラーが発生した場合はログファイルを開く
+if ($LASTEXITCODE -ne 0) {
+    "[$timestamp] エラーが発生したためログファイルを開きます" | Out-File -FilePath $LogFile -Append -Encoding UTF8
+    Invoke-Item $LogFile
+}
