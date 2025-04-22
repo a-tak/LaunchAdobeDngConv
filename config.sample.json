@@ -1,0 +1,21 @@
+{
+  "dngConverter": "C:\\Program Files\\Adobe\\Adobe DNG Converter\\Adobe DNG Converter.exe",
+  "rawExtensions": [".arw", ".cr2", ".cr3", ".nef", ".orf", ".raf", ".rw2", ".dng", ".raw"],
+  "logFile": "%USERPROFILE%\\Desktop\\dngconv_log.txt",
+  "postProcessing": [
+    {
+      "name": "サンプルプログラム1",
+      "enabled": true,
+      "path": "C:\\Program Files\\SampleApp\\App1.exe",
+      "arguments": "--process-images",
+      "waitForExit": true
+    },
+    {
+      "name": "サンプルプログラム2",
+      "enabled": false,
+      "path": "C:\\Program Files\\SampleApp\\App2.exe",
+      "arguments": "",
+      "waitForExit": false
+    }
+  ]
+}
