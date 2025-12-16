@@ -22,7 +22,7 @@ function Load-Config {
 # 後処理プログラムを実行する関数
 function Execute-PostProcessing {
     param (
-        [Parameter(Mandatory=$true)]
+        [Parameter(Mandatory = $true)]
         [string]$timestamp
     )
     
@@ -84,9 +84,22 @@ if (-Not (Test-Path $InputFolder)) {
     exit 1
 }
 
-# 出力先フォルダを設定（入力フォルダの一つ上）
+# 出力先フォルダを設定
 try {
-    $OutputFolder = Split-Path -Parent $InputFolder
+    if ($args.Count -ge 2 -and -not [string]::IsNullOrWhiteSpace($args[1])) {
+        $OutputFolder = $args[1]
+        
+        # 出力先フォルダが存在しない場合は作成
+        if (-not (Test-Path $OutputFolder)) {
+            New-Item -ItemType Directory -Path $OutputFolder | Out-Null
+            "[$timestamp] 出力先フォルダを作成しました: $OutputFolder" | Out-File -FilePath $LogFile -Append -Encoding UTF8
+        }
+    }
+    else {
+        # デフォルト：入力フォルダの一つ上
+        $OutputFolder = Split-Path -Parent $InputFolder
+    }
+
     if ([string]::IsNullOrWhiteSpace($OutputFolder)) {
         throw "出力先フォルダの取得に失敗しました"
     }
